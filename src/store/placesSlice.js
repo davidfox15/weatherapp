@@ -12,11 +12,11 @@ export const placesSlice = createSlice({
       state.values.push(action.payload.place);
     },
     del: (state, action) => {
-      state.values = state.values.filter((item) => item.name.toLowerCase() !== action.payload.name.toLowerCase())
+      state.values = state.values.filter((item) => item.name.toLowerCase() !== action.payload.name.toLowerCase());
     },
-    replace: (state,action) => {
+    replace: (state, action) => {
       state.values = action.payload.localData;
-    }
+    },
   },
 });
 

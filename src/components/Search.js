@@ -1,23 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loadLocalStorage, saveLocalStorage } from "../store/localStore";
-import { add, replace } from "../store/placesSlice";
+import { add } from "../store/placesSlice";
 
 export default function Search() {
   const [searchValue, setSearchValue] = useState("");
+  const [error, setError] = useState("");
 
   const places = useSelector((state) => state.places.values);
   const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   let localData = loadLocalStorage();
-  //   dispatch(replace({ localData }));
-  // }, []);
 
   function submitHandler(event) {
     event.preventDefault();
     if (searchValue === "") return;
     if (places.filter((place) => place.name.toLowerCase() === searchValue.toLowerCase()).length) return;
+
     const apikey = "053cd3cd99504b6f732b4399a0d3b256";
     fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${searchValue}&limit=1&appid=${apikey}`)
       .then((item) => item.json())
@@ -30,11 +26,11 @@ export default function Search() {
           lon: item[0].lon,
         };
         dispatch(add({ place }));
-        // saveLocalStorage(places);
       })
-      .catch((error) => console.warn(`ERROR(${error.code}): ${error.message}`));
-
-    // dispatch(add({ searchValue }));
+      .catch((error) => {
+        console.warn(`ERROR(${error.code}): ${error.message}`);
+        setError(error);
+      });
   }
 
   return (
@@ -43,6 +39,7 @@ export default function Search() {
         <input
           value={searchValue}
           onChange={(event) => {
+            setError(null);
             setSearchValue(event.target.value);
           }}
           type="text"
@@ -51,6 +48,7 @@ export default function Search() {
         />
         <button className="mx-10 py-2 px-4 border rounded hover:bg-white">Добавить город</button>
       </form>
+      {error && <div className="bg-red-500 my-3 p-1 rounded-md text-center max-w-xl">Город не найден</div>}
     </div>
   );
 }

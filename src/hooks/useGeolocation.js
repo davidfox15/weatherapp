@@ -11,13 +11,13 @@ export function useGeolocation() {
           name: "Мое местоположение",
           lat: response.coords.latitude,
           lon: response.coords.longitude,
-        })
+        });
       },
       (error) => {
         console.warn(`ERROR(${error.code}): ${error.message}`);
       }
     );
-  },[]);
+  }, []);
 
   return geolocation;
 }
