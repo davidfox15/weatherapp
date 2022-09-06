@@ -8,6 +8,7 @@ export function useGeolocation() {
       (response) => {
         console.log(response);
         setGeolocation({
+          name: "Мое местоположение",
           lat: response.coords.latitude,
           lon: response.coords.longitude,
         })
